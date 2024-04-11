@@ -2,12 +2,14 @@ package config
 
 import (
 	"fmt"
-	"gorm.io/driver/mysql"
-	"gorm.io/gorm"
 	"log"
 	"os"
+	ans "sekolahbeta/final-project/question-random-generator/src/app/answer/model"
 	cat "sekolahbeta/final-project/question-random-generator/src/app/category/model"
 	que "sekolahbeta/final-project/question-random-generator/src/app/question/model"
+
+	"gorm.io/driver/mysql"
+	"gorm.io/gorm"
 )
 
 type MysqlDB struct {
@@ -42,7 +44,7 @@ func OpenDB() {
 
 func autoMigrate(db *gorm.DB) error {
 	err := db.AutoMigrate(
-		&cat.Category{}, &que.Question{},
+		&cat.Category{}, &que.Question{}, &ans.Answer{},
 	)
 
 	if err != nil {

@@ -1,9 +1,11 @@
 package routes
 
 import (
-	"github.com/gofiber/fiber/v2"
+	ans "sekolahbeta/final-project/question-random-generator/src/app/answer/controllers"
 	cat "sekolahbeta/final-project/question-random-generator/src/app/category/controllers"
 	que "sekolahbeta/final-project/question-random-generator/src/app/question/controllers"
+
+	"github.com/gofiber/fiber/v2"
 )
 
 func Api(app *fiber.App) {
@@ -25,6 +27,12 @@ func Api(app *fiber.App) {
 			questionsGroup.Get("/by-id/:id", que.GetQuestionByID)
 			questionsGroup.Delete("/by-id/:id", que.DeleteByID)
 			questionsGroup.Put("/by-id/:id", que.UpdateQuestionByID)
+		}
+
+		answersGroup := route.Group("/answers")
+		{
+			answersGroup.Get("/", ans.GetAnswersList)
+			answersGroup.Post("/", ans.InsertAnswerData)
 		}
 	}
 }

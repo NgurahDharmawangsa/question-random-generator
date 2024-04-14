@@ -33,6 +33,9 @@ func Api(app *fiber.App) {
 		{
 			answersGroup.Get("/", ans.GetAnswersList)
 			answersGroup.Post("/", ans.InsertAnswerData)
+			answersGroup.Get("/:id", ans.GetAnswerByID)
+			answersGroup.Delete("/:id", ans.DeleteByID)
+			answersGroup.Put("/:id", ans.UpdateAnswerByID)
 		}
 	}
 }

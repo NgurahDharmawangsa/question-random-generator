@@ -7,6 +7,7 @@ import (
 	ans "sekolahbeta/final-project/question-random-generator/src/app/answer/model"
 	cat "sekolahbeta/final-project/question-random-generator/src/app/category/model"
 	que "sekolahbeta/final-project/question-random-generator/src/app/question/model"
+	mod "sekolahbeta/final-project/question-random-generator/src/app/module/model"
 
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
@@ -44,7 +45,7 @@ func OpenDB() {
 
 func autoMigrate(db *gorm.DB) error {
 	err := db.AutoMigrate(
-		&cat.Category{}, &que.Question{}, &ans.Answer{},
+		&cat.Category{}, &que.Question{}, &ans.Answer{}, &mod.Module{},
 	)
 
 	if err != nil {

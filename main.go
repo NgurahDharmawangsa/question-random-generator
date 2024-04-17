@@ -1,11 +1,13 @@
 package main
 
 import (
-	"github.com/gofiber/fiber/v2"
-	"github.com/joho/godotenv"
-	"github.com/sirupsen/logrus"
 	"sekolahbeta/final-project/question-random-generator/src/config"
 	"sekolahbeta/final-project/question-random-generator/src/routes"
+
+	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/cors"
+	"github.com/joho/godotenv"
+	"github.com/sirupsen/logrus"
 )
 
 func InitEnv() {
@@ -20,6 +22,11 @@ func main() {
 	config.OpenDB()
 
 	app := fiber.New()
+
+	app.Use(cors.New(cors.Config{
+		AllowOrigins: "http://localhost:5500",
+		AllowMethods: "GET,POST,PUT,DELETE",
+	}))
 
 	routes.Api(app)
 

@@ -1,9 +1,9 @@
 package controllers
 
 import (
-	"sekolahbeta/final-project/question-random-generator/src/app/answer/model"
 	"sekolahbeta/final-project/question-random-generator/src/app/answer/utils"
 	"sekolahbeta/final-project/question-random-generator/src/app/answer/validation"
+	"sekolahbeta/final-project/question-random-generator/src/app/models"
 
 	"strconv"
 
@@ -29,7 +29,7 @@ func InsertAnswerData(c *fiber.Ctx) error {
 		})
 	}
 
-	answer, errCreateAns := utils.InsertAnswerData(model.Answer{
+	answer, errCreateAns := utils.InsertAnswerData(models.Answer{
 		Option:     req.Option,
 		Answer:     req.Answer,
 		Score:      req.Score,
@@ -130,7 +130,7 @@ func UpdateAnswerByID(c *fiber.Ctx) error {
 	}
 	req.ID = answerId
 
-	answerData, errUpdateData := utils.UpdateAnswersByID(model.Answer{
+	answerData, errUpdateData := utils.UpdateAnswersByID(models.Answer{
 		Option:     req.Option,
 		Answer:     req.Answer,
 		Score:      req.Score,

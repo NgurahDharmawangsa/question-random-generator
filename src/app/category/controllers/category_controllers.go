@@ -1,13 +1,14 @@
 package controllers
 
 import (
+	"sekolahbeta/final-project/question-random-generator/src/app/category/utils"
+	"sekolahbeta/final-project/question-random-generator/src/app/category/validation"
+	"sekolahbeta/final-project/question-random-generator/src/app/models"
+	"strconv"
+
 	"github.com/asaskevich/govalidator"
 	"github.com/gofiber/fiber/v2"
 	"github.com/sirupsen/logrus"
-	"sekolahbeta/final-project/question-random-generator/src/app/category/model"
-	"sekolahbeta/final-project/question-random-generator/src/app/category/utils"
-	"sekolahbeta/final-project/question-random-generator/src/app/category/validation"
-	"strconv"
 )
 
 func InsertCategoryData(c *fiber.Ctx) error {
@@ -27,7 +28,7 @@ func InsertCategoryData(c *fiber.Ctx) error {
 		})
 	}
 
-	category, errCreateCar := utils.InsertCategoryData(model.Category{
+	category, errCreateCar := utils.InsertCategoryData(models.Category{
 		Name:  req.Name,
 		Order: req.Order,
 	})
@@ -132,7 +133,7 @@ func UpdateCategoryByID(c *fiber.Ctx) error {
 	}
 	req.ID = categoryId
 
-	categoryData, errUpdateData := utils.UpdateCategoriesByID(model.Category{
+	categoryData, errUpdateData := utils.UpdateCategoriesByID(models.Category{
 		Name:  req.Name,
 		Order: req.Order,
 	}, uint(req.ID))

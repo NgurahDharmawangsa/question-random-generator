@@ -1,12 +1,12 @@
 package utils
 
 import (
-	"sekolahbeta/final-project/question-random-generator/src/app/category/model"
+	"sekolahbeta/final-project/question-random-generator/src/app/models"
 	"sekolahbeta/final-project/question-random-generator/src/config"
 	"time"
 )
 
-func InsertCategoryData(data model.Category) (model.Category, error) {
+func InsertCategoryData(data models.Category) (models.Category, error) {
 	data.CreatedAt = time.Now()
 	data.UpdatedAt = time.Now()
 	err := data.Create(config.Mysql.DB)
@@ -14,21 +14,21 @@ func InsertCategoryData(data model.Category) (model.Category, error) {
 	return data, err
 }
 
-func GetCategoriesList() ([]model.Category, error) {
-	var category model.Category
+func GetCategoriesList() ([]models.Category, error) {
+	var category models.Category
 	return category.GetAll(config.Mysql.DB)
 }
 
-func GetCategoryByID(id uint) (model.Category, error) {
-	category := model.Category{
-		Model: model.Model{
+func GetCategoryByID(id uint) (models.Category, error) {
+	category := models.Category{
+		Model: models.Model{
 			ID: id,
 		},
 	}
 	return category.GetByID(config.Mysql.DB)
 }
 
-func UpdateCategoriesByID(data model.Category, id uint) (model.Category, error) {
+func UpdateCategoriesByID(data models.Category, id uint) (models.Category, error) {
 	data.UpdatedAt = time.Now()
 	err := data.UpdateOneByID(config.Mysql.DB, id)
 
@@ -36,8 +36,8 @@ func UpdateCategoriesByID(data model.Category, id uint) (model.Category, error) 
 }
 
 func DeleteByID(id uint) error {
-	category := model.Category{
-		Model: model.Model{
+	category := models.Category{
+		Model: models.Model{
 			ID: id,
 		},
 	}

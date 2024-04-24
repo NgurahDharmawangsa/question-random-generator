@@ -1,12 +1,12 @@
 package utils
 
 import (
-	"sekolahbeta/final-project/question-random-generator/src/app/question/model"
+	"sekolahbeta/final-project/question-random-generator/src/app/models"
 	"sekolahbeta/final-project/question-random-generator/src/config"
 	"time"
 )
 
-func InsertQuestionData(data model.Question) (model.Question, error) {
+func InsertQuestionData(data models.Question) (models.Question, error) {
 	data.CreatedAt = time.Now()
 	data.UpdatedAt = time.Now()
 	err := data.Create(config.Mysql.DB)
@@ -14,21 +14,21 @@ func InsertQuestionData(data model.Question) (model.Question, error) {
 	return data, err
 }
 
-func GetQuestionsList() ([]model.Question, error) {
-	var category model.Question
+func GetQuestionsList() ([]models.Question, error) {
+	var category models.Question
 	return category.GetAllQuestion(config.Mysql.DB)
 }
 
-func GetQuestionsByID(id uint) (model.Question, error) {
-	question := model.Question{
-		Model: model.Model{
+func GetQuestionsByID(id uint) (models.Question, error) {
+	question := models.Question{
+		Model: models.Model{
 			ID: id,
 		},
 	}
 	return question.GetByID(config.Mysql.DB)
 }
 
-func UpdateQuestionsByID(data model.Question, id uint) (model.Question, error) {
+func UpdateQuestionsByID(data models.Question, id uint) (models.Question, error) {
 	data.UpdatedAt = time.Now()
 	err := data.UpdateOneByID(config.Mysql.DB, id)
 
@@ -36,8 +36,8 @@ func UpdateQuestionsByID(data model.Question, id uint) (model.Question, error) {
 }
 
 func DeleteByID(id uint) error {
-	question := model.Question{
-		Model: model.Model{
+	question := models.Question{
+		Model: models.Model{
 			ID: id,
 		},
 	}

@@ -42,6 +42,11 @@ func Api(app *fiber.App) {
 		modulesGroup := route.Group("/modules")
 		{
 			modulesGroup.Post("/", mod.InsertModuleData)
+			modulesGroup.Get("/", mod.GetModulesList)
+			modulesGroup.Get("/:id", mod.GetModuleByID)
+			modulesGroup.Delete("/:id", mod.DeleteByID)
+			modulesGroup.Put("/:id", mod.UpdateModuleByID)
+			modulesGroup.Get("/exam/questions/:identifier", mod.GetQuestions)
 		}
 	}
 }

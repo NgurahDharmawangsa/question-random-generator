@@ -1,8 +1,6 @@
-package model
+package models
 
 import (
-	// "sekolahbeta/final-project/question-random-generator/src/app/question/model"
-
 	"gorm.io/gorm"
 )
 
@@ -12,7 +10,7 @@ type Answer struct {
 	Answer     string `gorm:"not null" json:"answer"`
 	Score      int    `gorm:"not null"  json:"score"`
 	QuestionId string `gorm:"type:char(36);constraint:OnDelete:CASCADE;" json:"question_id"`
-	// Question   model.Question `gorm:"constraint:OnDelete:CASCADE;"`
+	Question   Question `gorm:"constraint:OnDelete:CASCADE;"`
 }
 
 func (ans *Answer) Create(db *gorm.DB) error {

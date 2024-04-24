@@ -4,6 +4,7 @@ import (
 	ans "sekolahbeta/final-project/question-random-generator/src/app/answer/controllers"
 	cat "sekolahbeta/final-project/question-random-generator/src/app/category/controllers"
 	que "sekolahbeta/final-project/question-random-generator/src/app/question/controllers"
+	mod "sekolahbeta/final-project/question-random-generator/src/app/module/controllers"
 
 	"github.com/gofiber/fiber/v2"
 )
@@ -33,6 +34,19 @@ func Api(app *fiber.App) {
 		{
 			answersGroup.Get("/", ans.GetAnswersList)
 			answersGroup.Post("/", ans.InsertAnswerData)
+			answersGroup.Get("/:id", ans.GetAnswerByID)
+			answersGroup.Delete("/:id", ans.DeleteByID)
+			answersGroup.Put("/:id", ans.UpdateAnswerByID)
+		}
+
+		modulesGroup := route.Group("/modules")
+		{
+			modulesGroup.Post("/", mod.InsertModuleData)
+			modulesGroup.Get("/", mod.GetModulesList)
+			modulesGroup.Get("/:id", mod.GetModuleByID)
+			modulesGroup.Delete("/:id", mod.DeleteByID)
+			modulesGroup.Put("/:id", mod.UpdateModuleByID)
+			modulesGroup.Get("/exam/questions/:identifier", mod.GetQuestions)
 		}
 	}
 }

@@ -1,14 +1,14 @@
 package controllers
 
 import (
-	"github.com/asaskevich/govalidator"
-	"github.com/gofiber/fiber/v2"
-	"github.com/sirupsen/logrus"
-	cat "sekolahbeta/final-project/question-random-generator/src/app/category/model"
-	"sekolahbeta/final-project/question-random-generator/src/app/question/model"
+	"sekolahbeta/final-project/question-random-generator/src/app/models"
 	"sekolahbeta/final-project/question-random-generator/src/app/question/utils"
 	"sekolahbeta/final-project/question-random-generator/src/app/question/validation"
 	"strconv"
+
+	"github.com/asaskevich/govalidator"
+	"github.com/gofiber/fiber/v2"
+	"github.com/sirupsen/logrus"
 )
 
 func InsertQuestionData(c *fiber.Ctx) error {
@@ -28,7 +28,7 @@ func InsertQuestionData(c *fiber.Ctx) error {
 		})
 	}
 
-	question, errCreateCar := utils.InsertQuestionData(model.Question{
+	question, errCreateCar := utils.InsertQuestionData(models.Question{
 		Question:   req.Question,
 		CategoryId: req.CategoryId,
 	})
@@ -127,10 +127,10 @@ func UpdateQuestionByID(c *fiber.Ctx) error {
 	}
 	req.ID = questionId
 
-	questionData, errUpdateData := utils.UpdateQuestionsByID(model.Question{
+	questionData, errUpdateData := utils.UpdateQuestionsByID(models.Question{
 		Question:   req.Question,
 		CategoryId: req.CategoryId,
-		Category:   cat.Category{},
+		Category:   models.Category{},
 	}, uint(req.ID))
 
 	if errUpdateData != nil {

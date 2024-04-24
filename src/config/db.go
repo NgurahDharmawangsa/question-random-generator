@@ -4,9 +4,12 @@ import (
 	"fmt"
 	"log"
 	"os"
-	ans "sekolahbeta/final-project/question-random-generator/src/app/answer/model"
-	cat "sekolahbeta/final-project/question-random-generator/src/app/category/model"
-	que "sekolahbeta/final-project/question-random-generator/src/app/question/model"
+	"sekolahbeta/final-project/question-random-generator/src/app/models"
+
+	// ans "sekolahbeta/final-project/question-random-generator/src/app/answer/model"
+	// cat "sekolahbeta/final-project/question-random-generator/src/app/category/model"
+	// que "sekolahbeta/final-project/question-random-generator/src/app/question/model"
+	// mod "sekolahbeta/final-project/question-random-generator/src/app/module/model"
 
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
@@ -44,7 +47,7 @@ func OpenDB() {
 
 func autoMigrate(db *gorm.DB) error {
 	err := db.AutoMigrate(
-		&cat.Category{}, &que.Question{}, &ans.Answer{},
+		&models.Category{}, &models.Question{}, &models.Answer{}, &models.Module{},
 	)
 
 	if err != nil {

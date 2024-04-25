@@ -1,8 +1,8 @@
 package models
 
 import (
-	"math/rand"
-	"time"
+	// "math/rand"
+	// "time"
 
 	"github.com/lib/pq"
 	"gorm.io/gorm"
@@ -111,7 +111,7 @@ func (mod *Module) DeleteByID(db *gorm.DB) error {
 
 func (mod *Module) GetQuestions(db *gorm.DB) (Module, error) {
 	res := Module{}
-	questions := []Question{}
+	// questions := []Question{}
 
 	err := db.
 		Model(Module{}).
@@ -123,26 +123,7 @@ func (mod *Module) GetQuestions(db *gorm.DB) (Module, error) {
 		return Module{}, err
 	}
 
-	var ids []interface{}
-	for _, id := range res.QuestionIds {
-		ids = append(ids, id)
-	}
-
-	err = db.
-		Model(&Question{}).
-		Where("id IN ?", ids).Preload("Category").Preload("Answer").
-		Find(&questions).
-		Error
-	if err != nil {
-		return Module{}, err
-	}
-
-	rand.Seed(time.Now().UnixNano())
-	rand.Shuffle(len(questions), func(i, j int) {
-		questions[i], questions[j] = questions[j], questions[i]
-	})
-
-	res.Question = questions
-
 	return res, nil
 }
+
+

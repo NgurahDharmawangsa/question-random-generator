@@ -5,7 +5,7 @@ import "gorm.io/gorm"
 type Category struct {
 	Model
 	Name  string `gorm:"not null" json:"name"`
-	Order string `gorm:"not null" json:"order"`
+	Order uint `gorm:"not null" json:"order"`
 }
 type Categories []Category
 

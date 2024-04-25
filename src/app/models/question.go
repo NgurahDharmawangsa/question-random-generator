@@ -91,3 +91,19 @@ func (que *Question) DeleteByID(db *gorm.DB) error {
 
 	return nil
 }
+
+func (que *Question) GetQuestionByIDS(db *gorm.DB, ids any) ([]Question, error) {
+	res := []Question{}
+
+	err := db.
+		Model(Question{}).
+		Where("id IN ?", ids).Preload("Category").Preload("Answer").
+		Find(&res).
+		Error
+
+	if err != nil {
+		return []Question{}, err
+	}
+
+	return res, nil
+}

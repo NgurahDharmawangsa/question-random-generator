@@ -104,7 +104,7 @@ func UpdateCategoryByID(c *fiber.Ctx) error {
 	type AddCategoryRequest struct {
 		ID    int    `json:"id" form:"id"`
 		Name  string `json:"name" valid:"required"`
-		Order string `json:"order" valid:"required"`
+		Order uint `json:"order" valid:"required"`
 	}
 
 	req := new(AddCategoryRequest)

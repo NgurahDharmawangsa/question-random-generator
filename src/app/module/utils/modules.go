@@ -1,7 +1,7 @@
 package utils
 
 import (
-	"fmt"
+	// "fmt"
 	"math/rand"
 	"sekolahbeta/final-project/question-random-generator/src/app/models"
 	"sekolahbeta/final-project/question-random-generator/src/config"
@@ -74,21 +74,22 @@ func GetQuestions(identifier string) (models.Module, error) {
 
 	// var orderTemp string 
 	ansRand := []models.Answer{}
-	for i, v := range b {
-		randUtil.Shuffle(len(v.Answer), func(i, j int) {
-			v.Answer[i], v.Answer[j] = v.Answer[j], v.Answer[i]
-		})
-		ansRand = append(ansRand, v.Answer...)
-
-		b[i].Answer = ansRand
-	}
-
+	go func() {
+		for i, v := range b {
+			randUtil.Shuffle(len(v.Answer), func(i, j int) {
+				v.Answer[i], v.Answer[j] = v.Answer[j], v.Answer[i]
+			})
+			ansRand = append(ansRand, v.Answer...)
+	
+			b[i].Answer = ansRand
+		}	
+	}()
+	
 	catGroup := make(map[uint][]models.Question)
 	for _, v := range b {
 		catGroup[v.Category.Order] = append(catGroup[v.Category.Order], v)
 	}
 
-	fmt.Println(catGroup)
 	for _, group := range catGroup {
 		randUtil.Shuffle(len(group), func(i, j int) {
 			group[i], group[j] = group[j], group[i]

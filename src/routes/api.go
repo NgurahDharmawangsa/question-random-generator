@@ -5,6 +5,7 @@ import (
 	cat "sekolahbeta/final-project/question-random-generator/src/app/category/controllers"
 	que "sekolahbeta/final-project/question-random-generator/src/app/question/controllers"
 	mod "sekolahbeta/final-project/question-random-generator/src/app/module/controllers"
+	adm "sekolahbeta/final-project/question-random-generator/src/app/middleware"
 
 	"github.com/gofiber/fiber/v2"
 )
@@ -15,10 +16,14 @@ func Api(app *fiber.App) {
 		categoriesGroup := route.Group("/categories")
 		{
 			categoriesGroup.Get("/", cat.GetCategoriesList)
-			categoriesGroup.Post("/", cat.InsertCategoryData)
 			categoriesGroup.Get("/by-id/:id", cat.GetCategoryByID)
-			categoriesGroup.Delete("/by-id/:id", cat.DeleteByID)
-			categoriesGroup.Put("/by-id/:id", cat.UpdateCategoryByID)
+
+			securedCategoriesGroup := categoriesGroup.Use(adm.CheckRole)
+			{
+				securedCategoriesGroup.Post("/", cat.InsertCategoryData)
+				securedCategoriesGroup.Delete("/by-id/:id", cat.DeleteByID)
+				securedCategoriesGroup.Put("/by-id/:id", cat.UpdateCategoryByID)
+			}
 		}
 
 		questionsGroup := route.Group("/questions")

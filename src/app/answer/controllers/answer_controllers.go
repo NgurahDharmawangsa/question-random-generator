@@ -145,7 +145,7 @@ func UpdateAnswerByID(c *fiber.Ctx) error {
 			})
 	}
 
-	return c.Status(fiber.StatusOK).JSON(map[string]any{
+	return c.Status(fiber.StatusCreated).JSON(map[string]any{
 		"data":    answerData,
 		"message": "Success Update Data",
 	})

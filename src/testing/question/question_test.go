@@ -1,4 +1,4 @@
-package module_test
+package question_test
 
 import (
 	"bytes"
@@ -11,7 +11,6 @@ import (
 	"sekolahbeta/final-project/question-random-generator/src/app/models"
 	"sekolahbeta/final-project/question-random-generator/src/config"
 	"testing"
-	"time"
 )
 
 func Init() {
@@ -22,20 +21,20 @@ func Init() {
 	config.OpenDB()
 }
 
-func create(t *testing.T, name string, ids []int64) uint {
+func create(t *testing.T, question string, categoryId string) uint {
 	Init()
 
-	ansData := models.Module{
-		Name:        name,
-		QuestionIds: ids,
+	qstData := models.Question{
+		Question:   question,
+		CategoryId: categoryId,
 	}
 
-	jsonData, err := json.Marshal(ansData)
+	jsonData, err := json.Marshal(qstData)
 	if err != nil {
 		t.Errorf("error encoding JSON: %v", err)
 	}
 
-	req, err := http.NewRequest("POST", "http://127.0.0.1:3000/api/modules", bytes.NewBuffer(jsonData))
+	req, err := http.NewRequest("POST", "http://127.0.0.1:3000/api/questions", bytes.NewBuffer(jsonData))
 	if err != nil {
 		t.Errorf("error creating request: %v", err)
 	}
@@ -53,34 +52,34 @@ func create(t *testing.T, name string, ids []int64) uint {
 	}
 
 	var responseData struct {
-		Data    models.Module `json:"data"`
-		Message string        `json:"message"`
+		Data    models.Question `json:"data"`
+		Message string          `json:"message"`
 	}
 	err = json.Unmarshal(body, &responseData)
 	if err != nil {
 		t.Errorf("error decoding JSON response: %v", err)
 	}
+
 	id := responseData.Data.ID
 	return id
 }
 
-func rollback(t *testing.T, name string) {
-	config.Mysql.DB.Unscoped().Where("name = ?", name).Delete(&models.Module{})
+func rollback(t *testing.T, question string) {
+	config.Mysql.DB.Unscoped().Where("question = ?", question).Delete(&models.Question{})
 }
 
 func TestSuccessCreate(t *testing.T) {
 	Init()
 
-	modData := models.Module{
-		Identifier:  "MDL-" + time.Now().Format("20060102150405"),
-		Name:        "Module Create",
-		QuestionIds: []int64{1, 2, 3},
+	qstData := models.Question{
+		Question:   "Question 1",
+		CategoryId: "1",
 	}
 
-	jsonData, err := json.Marshal(modData)
+	jsonData, err := json.Marshal(qstData)
 	assert.Nil(t, err)
 
-	req, err := http.NewRequest("POST", "http://127.0.0.1:3000/api/modules", bytes.NewBuffer(jsonData))
+	req, err := http.NewRequest("POST", "http://127.0.0.1:3000/api/questions", bytes.NewBuffer(jsonData))
 	assert.Nil(t, err)
 
 	req.Header.Set("Content-Type", "application/json")
@@ -92,13 +91,13 @@ func TestSuccessCreate(t *testing.T) {
 		t.Errorf("unexpected status code: %d", resp.StatusCode)
 	}
 
-	rollback(t, "Module Create")
+	rollback(t, "Question 1")
 }
 
 func TestSuccessGetAll(t *testing.T) {
 	Init()
 
-	resp, err := http.Get("http://127.0.0.1:3000/api/modules")
+	resp, err := http.Get("http://127.0.0.1:3000/api/questions")
 	assert.Nil(t, err)
 	defer resp.Body.Close()
 
@@ -117,11 +116,9 @@ func TestSuccessGetAll(t *testing.T) {
 func TestSuccessGetByID(t *testing.T) {
 	Init()
 
-	id := create(t, "Module Create", []int64{1, 2, 3})
-	time.Sleep(2 * time.Second)
-	fmt.Println(id)
+	id := create(t, "Question Get By ID", "1")
 
-	getByIDURL := fmt.Sprintf("http://127.0.0.1:3000/api/modules/%d", id)
+	getByIDURL := fmt.Sprintf("http://127.0.0.1:3000/api/questions/by-id/%d", id)
 
 	resp, err := http.Get(getByIDURL)
 	if err != nil {
@@ -130,7 +127,7 @@ func TestSuccessGetByID(t *testing.T) {
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
-		t.Errorf("unexpected status code when getting modules by ID: %d", resp.StatusCode)
+		t.Errorf("unexpected status code when getting question by ID: %d", resp.StatusCode)
 	}
 
 	body, err := ioutil.ReadAll(resp.Body)
@@ -140,22 +137,22 @@ func TestSuccessGetByID(t *testing.T) {
 		t.Errorf("empty response body")
 	}
 
-	rollback(t, "Module Get By ID")
+	rollback(t, "Question Get By ID")
 }
 
 func TestUpdateData(t *testing.T) {
 	Init()
 
-	id := create(t, "Module Before Update", []int64{1, 2})
-	modData := models.Module{
-		Identifier: "MDL-22",
-		Name:       "Module Updated",
+	id := create(t, "Question Before Update", "1")
+	qstData := models.Question{
+		Question:   "Question Updated",
+		CategoryId: "1",
 	}
 
-	jsonData, err := json.Marshal(modData)
+	jsonData, err := json.Marshal(qstData)
 	assert.Nil(t, err)
 
-	req, err := http.NewRequest("PUT", fmt.Sprintf("http://127.0.0.1:3000/api/modules/%d", id), bytes.NewBuffer(jsonData))
+	req, err := http.NewRequest("PUT", fmt.Sprintf("http://127.0.0.1:3000/api/questions/by-id/%d", id), bytes.NewBuffer(jsonData))
 	assert.Nil(t, err)
 
 	req.Header.Set("Content-Type", "application/json")
@@ -167,15 +164,15 @@ func TestUpdateData(t *testing.T) {
 		t.Errorf("unexpected status code: %d", resp.StatusCode)
 	}
 
-	rollback(t, "Module Updated")
+	rollback(t, "Question Updated")
 }
 
 func TestDeleteData(t *testing.T) {
 	Init()
 
-	id := create(t, "Module Deleted", []int64{1, 2})
+	id := create(t, "Question Delete", "1")
 
-	req, err := http.NewRequest("DELETE", fmt.Sprintf("http://127.0.0.1:3000/api/modules/%d", id), nil)
+	req, err := http.NewRequest("DELETE", fmt.Sprintf("http://127.0.0.1:3000/api/questions/by-id/%d", id), nil)
 	assert.Nil(t, err)
 
 	req.Header.Set("Content-Type", "application/json")
@@ -187,30 +184,5 @@ func TestDeleteData(t *testing.T) {
 		t.Errorf("unexpected status code: %d", resp.StatusCode)
 	}
 
-	rollback(t, "Module Deleted")
-}
-
-func TestSuccessGetByIdentifier(t *testing.T) {
-	Init()
-
-	identifier := "MDL-20240428145900"
-
-	getByIDURL := fmt.Sprintf("http://127.0.0.1:3000/api/modules/exam/questions/%s", identifier)
-
-	resp, err := http.Get(getByIDURL)
-	if err != nil {
-		t.Errorf("error making HTTP request: %v", err)
-	}
-	defer resp.Body.Close()
-
-	if resp.StatusCode != http.StatusOK {
-		t.Errorf("unexpected status code when getting modules by ID: %d", resp.StatusCode)
-	}
-
-	body, err := ioutil.ReadAll(resp.Body)
-	assert.Nil(t, err)
-
-	if len(body) == 0 {
-		t.Errorf("empty response body")
-	}
+	rollback(t, "Question Delete")
 }

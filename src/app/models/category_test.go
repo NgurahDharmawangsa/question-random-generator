@@ -1,25 +1,15 @@
 package models_test
 
 import (
-	"fmt"
 	"sekolahbeta/final-project/question-random-generator/src/app/models"
 	"sekolahbeta/final-project/question-random-generator/src/config"
 
 	"testing"
 
-	"github.com/joho/godotenv"
 	"github.com/stretchr/testify/assert"
 )
 
-func Init() {
-	err := godotenv.Load("../../../.env")
-	if err != nil {
-		fmt.Println("env not found, using system env")
-	}
-	config.OpenDB()
-}
-
-func TestCreateCateogrySuccess(t *testing.T) {
+func TestCreateCategorySuccess(t *testing.T) {
 	Init()
 
 	cat := models.Category{
@@ -97,7 +87,7 @@ func TestDeleteByID(t *testing.T) {
 	Init()
 
 	cat := models.Category{
-		Name: "Category Deleted",
+		Name:  "Category Deleted",
 		Order: 14,
 	}
 
